@@ -24,3 +24,24 @@ def show_map():
         print("Error loading markers:", e)
 
     components.html(m._repr_html_(), height=600)
+
+        # Add 1km² grid overlay
+    lat_min, lat_max = 14.9, 15.9
+    lon_min, lon_max = 73.7, 74.3
+    lat_step = 0.009  # approx 1 km
+    lon_step = 0.009
+
+    lat_vals = list(np.arange(lat_min, lat_max, lat_step))
+    lon_vals = list(np.arange(lon_min, lon_max, lon_step))
+
+    for lat in lat_vals:
+        for lon in lon_vals:
+            bounds = [
+                [lat, lon],
+                [lat + lat_step, lon],
+                [lat + lat_step, lon + lon_step],
+                [lat, lon + lon_step],
+                [lat, lon]
+            ]
+            folium.PolyLine(bounds, color="green", weight=0.5, opacity=0.5).add_to(m)
+
