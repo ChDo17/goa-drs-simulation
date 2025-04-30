@@ -1,10 +1,13 @@
 import folium
 import pandas as pd
+import numpy as np
 import streamlit.components.v1 as components
 
 def show_map():
+    # Base map
     m = folium.Map(location=[15.5, 73.8], zoom_start=10, tiles="CartoDB dark_matter")
 
+    # ---- 1. Plot collection points ----
     try:
         df = pd.read_csv("data/collection_points.csv")
         for _, row in df.iterrows():
@@ -23,12 +26,10 @@ def show_map():
     except Exception as e:
         print("Error loading markers:", e)
 
-    components.html(m._repr_html_(), height=600)
-
-        # Add 1km² grid overlay
+    # ---- 2. Add 1 km² Grid Overlay ----
     lat_min, lat_max = 14.9, 15.9
     lon_min, lon_max = 73.7, 74.3
-    lat_step = 0.009  # approx 1 km
+    lat_step = 0.009
     lon_step = 0.009
 
     lat_vals = list(np.arange(lat_min, lat_max, lat_step))
@@ -43,5 +44,7 @@ def show_map():
                 [lat, lon + lon_step],
                 [lat, lon]
             ]
-            folium.PolyLine(bounds, color="green", weight=0.5, opacity=0.5).add_to(m)
+            folium.PolyLine(bounds, color="white", weight=0.5, opacity=0.5).add_to(m)
 
+    # ---- 3. Render map in Streamlit ----
+    components.html(m._repr_html_(), height=600)
