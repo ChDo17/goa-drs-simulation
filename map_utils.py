@@ -19,10 +19,12 @@ def show_map():
             }.get(row['category'], 'gray')
 
             folium.Marker(
-                location=[row['latitude'], row['longitude']],
-                popup=f"{row['name']} ({row['category']})",
-                icon=folium.Icon(color=color)
+                location=[latitude, longitude],
+                icon=folium.DivIcon(html=f"""
+                <div style="width:10px; height:10px; background-color:{color};"></div>
+                """)
             ).add_to(m)
+
     except Exception as e:
         print("Error loading markers:", e)
 
